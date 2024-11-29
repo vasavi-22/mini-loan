@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import { config } from "./src/config/index.js";
 
 import userRoutes from "./src/routes/user.route.js";
+import loanRoutes from "./src/routes/loan.route.js";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -34,6 +35,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Route handlers
 app.use('/user', userRoutes);
+app.use('/loan', loanRoutes);
 
 // Connect to MongoDB and start server
 (async () => {
