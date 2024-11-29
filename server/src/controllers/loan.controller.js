@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Loan from "../models/loan.model.js";
 import Repayment from "../models/repayment.model.js";
 
@@ -40,13 +41,16 @@ export const create = async (req, res) => {
 export const myloans = async (req, res) => {
   try {
     const { role, id } = req.user;
+    console.log(role);
+    console.log(id);
     if (role !== "customer")
       return res.status(403).json({ message: "Access denied" });
 
-    const loans = await Loan.find({ userId: id }).populate(
+    const loans = await Loan.find({ userId: new mongoose.Types.ObjectId(id) }).populate(
       "userId",
       "name email"
     );
+    console.log(loans);
     res.json(loans);
   } catch (err) {
     res.status(500).json({ error: err.message });
