@@ -9,11 +9,11 @@ const UserSchema = new mongoose.Schema({
     role: { type: String, enum: ['customer', 'admin'], default: 'customer' },
 });
 
-UserSchema.pre('save', async function(next) {
-    if (!this.isModified('password')) return next();
-    this.password = await bcrypt.hash(this.password, 10);
-    next();
-});
+// UserSchema.pre('save', async function(next) {
+//     if (!this.isModified('password')) return next();
+//     this.password = await bcrypt.hash(this.password, 10);
+//     next();
+// });
 
 const User = mongoose.model('User', UserSchema);
 

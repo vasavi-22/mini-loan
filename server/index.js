@@ -3,6 +3,8 @@ import session from "express-session";
 import mongoose from "mongoose";
 import { config } from "./src/config/index.js";
 
+import userRoutes from "./src/routes/user.route.js";
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -18,9 +20,20 @@ const PORT = process.env.PORT || 5000;
 // app.use(cors(corsOptions));
 // app.options('*', cors(corsOptions)); // Handle preflight requests
 
+// Session configuration
+app.use(session({
+    secret: 'mySuperSecretKey123456!',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }, // Set secure to true in production with HTTPS
+}));
+
 // Middleware for parsing JSON and URL-encoded data
-// app.use(express.json());
-// app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Route handlers
+app.use('/user', userRoutes);
 
 // Connect to MongoDB and start server
 (async () => {
