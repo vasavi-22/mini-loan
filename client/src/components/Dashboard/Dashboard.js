@@ -13,6 +13,9 @@ const Dashboard = () => {
   const [amount, setAmount] = useState(0);
   const [term, setTerm] = useState(0);
   const [visible, setVisible] = useState(false);
+  const [repay, setRepay] = useState({});
+  const [repayAmount, setRepayAmount] = useState(0);
+  const [show, setShow] = useState(false);
 
   const { loggedInUser } = useContext(UserContext);
   const token = loggedInUser?.token;
@@ -60,7 +63,7 @@ const Dashboard = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        console.log(response);
+        console.log(response,"loans response");
         setLoans(response.data);
       } else {
         const response = await axios.get("/loan/all-loans", {
@@ -103,6 +106,41 @@ const Dashboard = () => {
       console.log("Error adding loan: ", error);
     }
   };
+
+  const handleRepayment = async (e) => {
+    e.preventDefault();
+  
+    try {
+      const repaymentData = {
+        loanId: repay.loanId,
+        repaymentId: repay._id,
+        amount: repayAmount,
+      };
+  
+      const currentDate = new Date();
+      if (repayAmount >= repay.amount && currentDate <= new Date(repay.dueDate)) {
+        console.log("Proceeding with repayment...");
+
+        const response = await axios.post("/loan/repay", repaymentData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+  
+        console.log(response.data.message);
+        fetchLoans();
+        setRepayAmount(0);
+        setShow(false);
+      } else {
+        console.log("Repayment conditions not met");
+      }
+    } catch (error) {
+      console.error("Repayment failed:", error.response?.data?.message || error.message);
+    }
+  };
+  
+
   console.log(loans);
 
   if (loading) return <div>Loading loans...</div>;
@@ -166,6 +204,7 @@ const Dashboard = () => {
             <th>Term</th>
             <th>Status</th>
             <th>Created On</th>
+            {data.role === "customer" ? <th>Repayments</th> : ''}
           </thead>
           <tbody>
             {loans.map((loan, index) => (
@@ -197,11 +236,54 @@ const Dashboard = () => {
                   </td>
                 )}
                 <td>{new Date(loan.createdAt).toLocaleDateString()}</td>
+                <td>
+                  {loan.repayments.map((re) => (
+                    <div key={re._id}>
+                      <span>{re.amount} - {new Date(re.dueDate).toLocaleDateString()}</span>
+                      {re.status === "PENDING" ? <button onClick={() => {
+                        setRepay(re);
+                        setShow(true);
+                      }} style={{cursor: "pointer"}}>Pay</button> : <button disabled style={{cursor:"pointer", backgroundColor:"green"}}>Paid</button>}
+                    </div>
+                  ))}
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       )}
+      <Dialog
+        className="create-loan"
+        header="Repayment Details"
+        visible={show}
+        style={{ width: "35vw", height: "35vw" }}
+        onHide={() => {
+          setShow(false);
+          setRepayAmount(0);
+        }}
+        footer={
+          <div className="footer-div">
+            <Button label="Pay" onClick={(e) => handleRepayment(e)} autoFocus />
+            <Button
+              label="Cancel"
+              onClick={() => {
+                setShow(false);
+                setRepayAmount(0);
+              }}
+            />
+          </div>
+        }
+      >
+        <form>
+          <input
+            type="number"
+            placeholder="Enter Amount"
+            value={repayAmount}
+            onChange={(e) => setRepayAmount(e.target.value)}
+            required
+          />
+        </form>
+      </Dialog>
     </div>
   );
 };
