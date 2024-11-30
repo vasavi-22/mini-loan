@@ -1,0 +1,129 @@
+.main-div{
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin: 40px;
+}
+
+.main-div .a-btn{
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #0077b6;
+    color: white;
+    cursor: pointer;
+    width : 200px;
+}
+
+.create-loan{
+    padding: 15px;
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    border-radius: 4px;
+}
+
+.footer-div{
+    float: right;
+}
+
+.footer-div Button{
+    background-color: #f2f3f5;
+    border: none;
+    border-radius: 4px;
+    padding: 10px;
+    margin: 5px;
+}
+
+.footer-div Button:focus{
+    background-color: #d3d3d3;
+}
+
+.create-loan input{
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    padding: 10px;
+    margin: 20px 0px;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    width: 100%;
+    margin-bottom: 20px; 
+    box-sizing: border-box;
+    position: relative;
+}
+
+.create-loan input::placeholder{
+    color: #999;
+    position: relative;
+}
+
+.create-loan input::before{
+    content: "";
+    display: block;
+    width: 100%;
+    height: 1px;
+    background: #ccc;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.create-loan input:focus::before{
+    background: #007bff;
+}
+
+.data-table{
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 16px;
+    font-family: Arial, sans-serif;
+    text-align: left;
+}
+  
+.data-table caption {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+}
+  
+.data-table thead {
+    background-color: #0077b6;
+    color: white;
+}
+  
+.data-table th, .data-table td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+}
+  
+.data-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+  
+.data-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+  
+.data-table tbody td {
+    vertical-align: middle;
+}
+  
+/* .data-table th {
+    text-transform: uppercase;
+} */
+  
+.data-table tbody tr:last-of-type {
+    border-bottom: 2px solid #0077b6;
+}
+
+.data-table button{
+    width: 80px;
+    padding: 5px;
+    margin-top: 10px;
+    margin-left: 10px;
+    color: white;
+    background-color: #0077b6;
+    border: none;
+    border-radius: 4px;
+}
+  

@@ -8,7 +8,7 @@ export const create = async (req, res) => {
     console.log(req.user, "req.user");
     const { role, id } = req.user; // Extract role and user ID from the token
     if (role !== "customer")
-      return res.status(403).json({ message: "Access denied chin chongoo" });
+      return res.status(403).json({ message: "Access denied" });
 
     const { amount, term } = req.body;
     if (!amount || !term)
