@@ -27,8 +27,10 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
     const { email, password } = req.body;
+    console.log("log");
 
     try {
+      console.log("loginnnnnnn");
       const user = await User.findOne({ email });
       console.log(user);
       if (!user) {
@@ -42,6 +44,7 @@ export const login = async (req, res) => {
       if (!isMatch) {
         return res.status(400).send("Invalid credentials");
       }
+      console.log("matchedddd");
   
       const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
         expiresIn: "1h",
@@ -51,6 +54,7 @@ export const login = async (req, res) => {
       res.json({ token, user });
 
     } catch (error) {
+      console.log(error,"errrrrrrrrrrrrrr");
       res.status(500).send("Server error");
     }
 };

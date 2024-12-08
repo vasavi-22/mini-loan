@@ -12,8 +12,10 @@ const Login = () => {
   const { loggedInUser, setUser} = useContext(UserContext);
 
   const handleSubmit = async (e) => {
+    console.log("logggggggggggggggggggggggg");
     e.preventDefault();
     try {
+      console.log("logging in");
       const response = await axios.post("/user/login", {
         email,
         password,
