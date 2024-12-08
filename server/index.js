@@ -13,17 +13,7 @@ const PORT = process.env.PORT || 5000;
 // Configure CORS
 const corsOptions = {
     // origin: 'http://localhost:3000', // Frontend origin
-    origin: (origin, callback) => {
-      const allowedOrigins = [
-        "http://localhost:3000",
-        "https://mini-loan-rzyd.vercel.app",
-      ];
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
+    origin: "https://mini-loan-rzyd.vercel.app",
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allow necessary methods
     credentials: true, // Allow cookies and credentials
     allowedHeaders: ['Content-Type', 'Authorization'], // Allow necessary headers
