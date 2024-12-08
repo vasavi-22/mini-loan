@@ -41,11 +41,15 @@ const Dashboard = () => {
       const newState = updatedStates[loanId];
       if (!newState) return; // Skip if no new state is selected
 
-      await axios.patch(`/loan/approve/${loanId}`, { state: newState }, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await axios.patch(
+        `/loan/approve/${loanId}`,
+        { state: newState },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       // alert("Loan state updated successfully!");
 
       fetchLoans();
@@ -63,7 +67,7 @@ const Dashboard = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        console.log(response,"loans response");
+        console.log(response, "loans response");
         setLoans(response.data);
       } else {
         const response = await axios.get("/loan/all-loans", {
@@ -89,6 +93,7 @@ const Dashboard = () => {
 
   const handleAddLoan = async (e) => {
     e.preventDefault();
+    console.log("Adding loan");
     const newLoan = { amount, term };
     try {
       const response = await axios.post("/loan/create", newLoan, {
@@ -97,8 +102,9 @@ const Dashboard = () => {
           "Content-Type": "application/json",
         },
       });
-      console.log(response);
-      setLoans([...loans, response.data.loan]);
+      console.log(response, "new loan response");
+      // setLoans([...loans, response.data.loan]);
+      fetchLoans();
       setAmount(0);
       setTerm(0);
       setVisible(false);
@@ -109,16 +115,19 @@ const Dashboard = () => {
 
   const handleRepayment = async (e) => {
     e.preventDefault();
-  
+
     try {
       const repaymentData = {
         loanId: repay.loanId,
         repaymentId: repay._id,
         amount: repayAmount,
       };
-  
+
       const currentDate = new Date();
-      if (repayAmount >= repay.amount && currentDate <= new Date(repay.dueDate)) {
+      if (
+        repayAmount >= repay.amount &&
+        currentDate <= new Date(repay.dueDate)
+      ) {
         console.log("Proceeding with repayment...");
 
         const response = await axios.post("/loan/repay", repaymentData, {
@@ -127,7 +136,7 @@ const Dashboard = () => {
             "Content-Type": "application/json",
           },
         });
-  
+
         console.log(response.data.message);
         fetchLoans();
         setRepayAmount(0);
@@ -136,10 +145,12 @@ const Dashboard = () => {
         console.log("Repayment conditions not met");
       }
     } catch (error) {
-      console.error("Repayment failed:", error.response?.data?.message || error.message);
+      console.error(
+        "Repayment failed:",
+        error.response?.data?.message || error.message
+      );
     }
   };
-  
 
   console.log(loans);
 
@@ -199,12 +210,14 @@ const Dashboard = () => {
         <table className="data-table">
           <caption className="t-caption">Loans</caption>
           <thead>
-            <th>S.No</th>
-            <th>Amount</th>
-            <th>Term</th>
-            <th>Status</th>
-            <th>Created On</th>
-            {data.role === "customer" ? <th>Repayments</th> : ''}
+            <tr>
+              <th>S.No</th>
+              <th>Amount</th>
+              <th>Term</th>
+              <th>Status</th>
+              <th>Created On</th>
+              {data.role === "customer" ? <th>Repayments</th> : ""}
+            </tr>
           </thead>
           <tbody>
             {loans.map((loan, index) => (
@@ -227,7 +240,9 @@ const Dashboard = () => {
                       >
                         <option value="PENDING">PENDING</option>
                         <option value="APPROVED">APPROVED</option>
-                        <option value="PAID" disabled>PAID</option>
+                        <option value="PAID" disabled>
+                          PAID
+                        </option>
                       </select>
                       <button onClick={() => updateLoanState(loan._id)}>
                         Update
@@ -239,11 +254,31 @@ const Dashboard = () => {
                 <td>
                   {loan.repayments.map((re) => (
                     <div key={re._id}>
-                      <span>{re.amount} - {new Date(re.dueDate).toLocaleDateString()}</span>
-                      {re.status === "PENDING" ? <button onClick={() => {
-                        setRepay(re);
-                        setShow(true);
-                      }} style={{cursor: "pointer"}}>Pay</button> : <button disabled style={{cursor:"pointer", backgroundColor:"green"}}>Paid</button>}
+                      <span>
+                        {re.amount} -{" "}
+                        {new Date(re.dueDate).toLocaleDateString()}
+                      </span>
+                      {re.status === "PENDING" ? (
+                        <button
+                          onClick={() => {
+                            setRepay(re);
+                            setShow(true);
+                          }}
+                          style={{ cursor: "pointer" }}
+                        >
+                          Pay
+                        </button>
+                      ) : (
+                        <button
+                          disabled
+                          style={{
+                            cursor: "pointer",
+                            backgroundColor: "green",
+                          }}
+                        >
+                          Paid
+                        </button>
+                      )}
                     </div>
                   ))}
                 </td>
